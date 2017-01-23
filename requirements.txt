@@ -6,6 +6,7 @@ discord.py==0.16.5
 html5lib==0.999
 multidict==2.1.4
 pexpect==4.2.1
+pokemontcgsdk==1.1.0
 ptyprocess==0.5.1
 pygobject==3.14.0
 requests==2.4.3
