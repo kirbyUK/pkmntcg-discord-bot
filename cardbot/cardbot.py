@@ -2,6 +2,8 @@
 import discord
 import asyncio
 import logging
+import pokemontcg
+import re
 
 client = discord.Client()
 
@@ -13,8 +15,9 @@ def on_ready():
 @client.event
 @asyncio.coroutine
 def on_message(message):
-	if message.content.startswith("hello") and message.author != client.user:
-		yield from client.send_message(message.channel, "hello!")
+	match = re.match("!search\s+(.*)$", message.content)
+	if match:
+		yield from client.send_message(message.channel, pokemontcg.search(match.group(1)))
 
 def main():
 	logging.basicConfig(level=logging.INFO)
