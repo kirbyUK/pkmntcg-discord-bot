@@ -1,0 +1,15 @@
+aiohttp==1.0.5
+async-timeout==1.1.0
+chardet==2.3.0
+colorama==0.3.2
+discord.py==0.16.5
+html5lib==0.999
+multidict==2.1.4
+pexpect==4.2.1
+ptyprocess==0.5.1
+pygobject==3.14.0
+requests==2.4.3
+six==1.8.0
+urllib3==1.9.1
+websockets==3.2
+wheel==0.24.0
