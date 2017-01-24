@@ -7,6 +7,12 @@ import re
 
 client = discord.Client()
 
+# Gets the token from a file
+def read_token(filename):
+	f = open(filename, 'r')
+	token = f.read()
+	return token
+
 @client.event
 @asyncio.coroutine
 def on_ready():
@@ -32,7 +38,8 @@ def on_message(message):
 
 def main():
 	logging.basicConfig(level=logging.INFO)
-	client.run("token")
+	token = read_token("../token")
+	client.run(token)
 
 if __name__ == '__main__':
 	main()
