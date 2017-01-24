@@ -5,6 +5,7 @@ from pokemontcgsdk import Type
 from pokemontcgsdk import Supertype
 from pokemontcgsdk import Subtype
 
+# Shorthand symbols for attack energy costs, as used by PokeBeach
 short_energy = {
 	"Colorless" : "[C]",
 	"Darkness" :  "[D]",
@@ -19,6 +20,9 @@ short_energy = {
 	"Water" :     "[W]",
 }
 
+# Given a string, searches for cards by name using the given string. Return a
+# list of matches sorted by release, and the set name and code the card was
+# released in
 def search(name):
 	# Search for the given text
 	cards = Card.where(name = name).all()
@@ -54,6 +58,7 @@ def search(name):
 			 card[1].total_cards, card[1].code))
 	return return_str
 
+# Given a card name and set code, display an image and the text of the card
 def show(name, card_set):
 	# Search for the given card
 	cards = Card.where(name = name).where(setCode=card_set).all()
@@ -93,10 +98,13 @@ def show(name, card_set):
 				return_str += "\n"
 		if card.weaknesses != None:
 			for weakness in card.weaknesses:
-				return_str += "Weakness: %s (%s)\n" % (weakness['type'], weakness['value'])
+				return_str += ("Weakness: %s (%s)\n" %
+					(weakness['type'], weakness['value']))
 		if card.resistances != None:
+			print(card.resistances)
 			for resistance in card.resistances:
-				return_str += "Resistance: %s (%s)\n" % (resistance['type'], resistance['value'])
+				return_str += ("Resistance: %s (%s)\n" %
+					(resistance['type'], resistance['value']))
 		return_str += "Retreat: %s" % len(card.retreat_cost)
 
 	# Trainers and Energy are a lot easier
