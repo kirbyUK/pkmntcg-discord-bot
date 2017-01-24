@@ -5,6 +5,20 @@ from pokemontcgsdk import Type
 from pokemontcgsdk import Supertype
 from pokemontcgsdk import Subtype
 
+short_energy = {
+	"Colorless" : "[C]",
+	"Darkness" :  "[D]",
+	"Fairy" :     "[Y]",
+	"Fighting" :  "[F]",
+	"Fire" :      "[R]",
+	"Grass" :     "[G]",
+	"Lightning" : "[L]",
+	"Leaf" :      "[G]",
+	"Metal" :     "[M]",
+	"Psychic" :   "[P]",
+	"Water" :     "[W]",
+}
+
 def search(name):
 	# Search for the given text
 	cards = Card.where(name = name).all()
@@ -36,5 +50,60 @@ def search(name):
 	return_str = "Matches for search '%s'\n" % name
 	for card in cards_with_sets:
 		return_str += ("%s - %s %s/%s (`%s`)\n" %
-			(card[0].name, card[1].name, card[0].number, card[1].total_cards, card[1].code))
+			(card[0].name, card[1].name, card[0].number,
+			 card[1].total_cards, card[1].code))
+	return return_str
+
+def show(name, card_set):
+	# Search for the given card
+	cards = Card.where(name = name).where(setCode=card_set).all()
+
+	if len(cards) == 0:
+		return ("No results found for '%s' in set `%s`" %
+			(name, card_set))
+
+	if len(cards) > 1:
+		return "Too many results"
+
+	card = cards[0]
+
+	# Create a string for the card text
+	return_str = "%s\n" % card.image_url
+	return_str += "```\n"
+
+	# Pokemon are the most involved as they have a lot going on
+	if card.supertype == "Pokémon":
+		return_str += "%s - %s - HP%s\n" % (card.name, "/".join(card.types), card.hp)
+		return_str += "%s Pokemon\n\n" % card.subtype
+		if card.ability != None:
+			return_str += "%s: %s\n" % (card.ability['type'], card.ability['name'])
+			return_str += "%s\n" % card.ability['text']
+			return_str += "\n"
+		if card.attacks != None:
+			for attack in card.attacks:
+				for cost in attack['cost']:
+					return_str += "%s" % short_energy[cost]
+				return_str += " %s" % attack['name']
+				if attack['damage'] != '':
+					return_str += ": %s damage\n" % attack['damage']
+				else:
+					return_str += "\n"
+				if attack['text'] != None:
+					return_str += "%s\n" % attack['text']
+				return_str += "\n"
+		if card.weaknesses != None:
+			for weakness in card.weaknesses:
+				return_str += "Weakness: %s (%s)\n" % (weakness['type'], weakness['value'])
+		if card.resistances != None:
+			for resistance in card.resistances:
+				return_str += "Resistance: %s (%s)\n" % (resistance['type'], resistance['value'])
+		return_str += "Retreat: %s" % len(card.retreat_cost)
+
+	# Trainers and Energy are a lot easier
+	elif card.supertype == "Trainer" or card.supertype == "Energy":
+		return_str += "%s\n" % card.name
+		return_str += "%s\n\n" % card.subtype
+		return_str += "%s\n" % card.text[0]
+
+	return_str += "```\n"
 	return return_str

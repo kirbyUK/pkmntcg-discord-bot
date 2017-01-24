@@ -17,11 +17,23 @@ def on_ready():
 def on_message(message):
 	match = re.match("!search\s+(.*)$", message.content)
 	if match:
-		yield from client.send_message(message.channel, pokemontcg.search(match.group(1)))
+		yield from client.send_message(
+			message.channel,
+			pokemontcg.search(match.group(1))
+		)
+
+	match = re.match("!show\s+(.*)\s+(.*)$", message.content)
+	if match:
+		yield from client.send_message(
+			message.channel,
+			pokemontcg.show(match.group(1), match.group(2))
+		)
+
 
 def main():
 	logging.basicConfig(level=logging.INFO)
-	client.run("token")
+#	client.run("token")
+	client.run("MjczMDk0OTI5NjcxMTI3MDQw.C2fbcg.Y6ahIPa3ZDIlbnswKEMM3R7vXfo")
 
 if __name__ == '__main__':
 	main()
