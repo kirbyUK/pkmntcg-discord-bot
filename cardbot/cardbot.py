@@ -32,8 +32,7 @@ def on_message(message):
 
 def main():
 	logging.basicConfig(level=logging.INFO)
-#	client.run("token")
-	client.run("MjczMDk0OTI5NjcxMTI3MDQw.C2fbcg.Y6ahIPa3ZDIlbnswKEMM3R7vXfo")
+	client.run("token")
 
 if __name__ == '__main__':
 	main()
