@@ -5,6 +5,10 @@ import logging
 import pokemontcg
 import re
 
+# The maximum number of lines the bot will post to a public server in one
+# message. Anything larger will be private messaged to avoid clutter
+MAX_LINES = 15
+
 client = discord.Client()
 
 # Gets the token from a file
@@ -56,7 +60,7 @@ def on_message(received):
 	match = re.match("!search\s+(.*)$", received.content)
 	if match:
 		message = pokemontcg.search(match.group(1))
-		if len(message.split('\n')) > 15:
+		if len(message.split('\n')) - 1 > MAX_LINES:
 			yield from client.send_message(
 				recipient,
 				"Results list is too long, messaging instead"
