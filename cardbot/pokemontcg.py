@@ -34,6 +34,11 @@ def search(name):
 	if len(cards) == 0:
 		return "No matches for search '%s'" % name
 
+	# If there is exactly one match, save time for the user and give the
+	# !show output instead
+	if len(cards) == 1:
+		return show(cards[0].name, cards[0].set_code)
+
 	# If there are matches, build a string with the name, set and set code
 	# of every match
 	cards_with_sets = []
