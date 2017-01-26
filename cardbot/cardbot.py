@@ -13,6 +13,31 @@ def read_token(filename):
 	token = f.read()
 	return token
 
+# A help message listing the available commands and syntax
+def cardbot_help():
+	return """
+```
+!search [card-name]
+	Gives a list of all cards matching the search
+	[card-name], as well as the set code and name.
+
+	e.g.
+		!search ambipom
+		!search ninja boy
+		!search splash energy
+
+!show [card-name] [set-code]
+	Displays the text and image of the given card
+	from the given set. If you are unsure of the
+	set code, find it using !search first.
+
+	e.g.
+		!show ambipom xy11
+		!show ninja boy xy11
+		!show splash energy xy9
+```
+	"""
+
 @client.event
 @asyncio.coroutine
 def on_ready():
@@ -23,6 +48,10 @@ def on_ready():
 def on_message(received):
 	message = ""
 	recipient = received.channel
+
+	if received.content.startswith("!help"):
+		recipient = received.author
+		message = cardbot_help()
 
 	match = re.match("!search\s+(.*)$", received.content)
 	if match:
