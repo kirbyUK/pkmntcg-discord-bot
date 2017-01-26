@@ -20,20 +20,26 @@ def on_ready():
 
 @client.event
 @asyncio.coroutine
-def on_message(message):
-	match = re.match("!search\s+(.*)$", message.content)
-	if match:
-		yield from client.send_message(
-			message.channel,
-			pokemontcg.search(match.group(1))
-		)
+def on_message(received):
+	message = ""
+	recipient = received.channel
 
-	match = re.match("!show\s+(.*)\s+(.*)$", message.content)
+	match = re.match("!search\s+(.*)$", received.content)
 	if match:
-		yield from client.send_message(
-			message.channel,
-			pokemontcg.show(match.group(1), match.group(2))
-		)
+		message = pokemontcg.search(match.group(1))
+		if len(message.split('\n')) > 15:
+			yield from client.send_message(
+				recipient,
+				"Results list is too long, messaging instead"
+			)
+			recipient = received.author
+
+	match = re.match("!show\s+(.*)\s+(.*)$", received.content)
+	if match:
+		message = pokemontcg.show(match.group(1), match.group(2))
+
+	if len(message) > 0:
+		yield from client.send_message(recipient, message)
 
 
 def main():
