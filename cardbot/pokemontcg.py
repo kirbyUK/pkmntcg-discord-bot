@@ -58,24 +58,37 @@ def search(name):
 	# Create the returned string
 	return_str = "Matches for search '%s'\n" % name
 	for card in cards_with_sets:
-		return_str += ("%s - %s %s/%s (`%s`)\n" %
+		return_str += ("%s - %s %s/%s (`%s-%s`)\n" %
 			(card[0].name, card[1].name, card[0].number,
-			 card[1].total_cards, card[1].code))
+			 card[1].total_cards, card[1].code, card[0].number))
 	return return_str
 
 # Given a card name and set code, display an image and the text of the card
 def show(name, card_set):
-	# Search for the given card
-	cards = Card.where(name = name).where(setCode=card_set).all()
+	# If the card set includes a specific number, we can just use that to
+	# get the card
+	card = None
+	if "-" in card_set:
+		card = Card.find(card_set)
+		if card == None:
+			return "No results for card `%s`" % card_set
+	else:
+		# Search for the given card
+		cards = Card.where(name = name).where(setCode=card_set).all()
 
-	if len(cards) == 0:
-		return ("No results found for '%s' in set `%s`" %
-			(name, card_set))
+		if len(cards) == 0:
+			return ("No results found for '%s' in set `%s`" %
+				(name, card_set))
 
-	if len(cards) > 1:
-		return "Too many results"
+		if len(cards) > 1:
+			return (
+"""
+Too many results. Try specifying the card number too. For example
+`!show %s %s-%s`
+""" % (name, card_set, cards[0].number)
+			)
 
-	card = cards[0]
+		card = cards[0]
 
 	# Create a string for the card text
 	return_str = "%s\n" % card.image_url
@@ -106,11 +119,11 @@ def show(name, card_set):
 				return_str += ("Weakness: %s (%s)\n" %
 					(weakness['type'], weakness['value']))
 		if card.resistances != None:
-			print(card.resistances)
 			for resistance in card.resistances:
 				return_str += ("Resistance: %s (%s)\n" %
 					(resistance['type'], resistance['value']))
-		return_str += "Retreat: %s" % len(card.retreat_cost)
+		if card.retreat_cost != None:
+			return_str += "Retreat: %s" % len(card.retreat_cost)
 
 	# Trainers and Energy are a lot easier
 	elif card.supertype == "Trainer" or card.supertype == "Energy":

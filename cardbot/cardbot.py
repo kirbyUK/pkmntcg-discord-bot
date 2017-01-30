@@ -71,6 +71,10 @@ def on_message(received):
 	if match:
 		message = pokemontcg.show(match.group(1), match.group(2))
 
+#	match = re.match("!show\s+(.*-.*)$", received.content)
+#	if match:
+#		message = pokemontcg.show("", match.group(1))
+
 	if len(message) > 0:
 		yield from client.send_message(recipient, message)
 
