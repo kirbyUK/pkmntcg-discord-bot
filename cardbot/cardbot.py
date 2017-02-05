@@ -36,9 +36,9 @@ def cardbot_help():
 	set code, find it using !search first.
 
 	e.g.
-		!show ambipom xy11
-		!show ninja boy xy11
-		!show splash energy xy9
+		!show ambipom xy11-91
+		!show ninja boy xy11-103
+		!show splash energy xy9-113
 ```
 	"""
 
