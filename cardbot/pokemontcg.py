@@ -96,12 +96,25 @@ Too many results. Try specifying the card number too. For example
 
 	# Pokemon are the most involved as they have a lot going on
 	if card.supertype == "Pokémon":
-		return_str += "%s - %s - HP%s\n" % (card.name, "/".join(card.types), card.hp)
+		# Start with the Pokemon's name and type(s)
+		return_str += "%s - %s" % (card.name, "/".join(card.types))
+
+		# Some Pokemon have no HP (e.g. the second half of LEGEND cards),
+		# so do only add it if it exists
+		if card.hp != None:
+			return_str += " - HP%s\n" % (card.hp)
+		else:
+			return_str += "\n"
+
 		return_str += "%s Pokemon\n\n" % card.subtype
+
+		# Add the ability if present
 		if card.ability != None:
 			return_str += "%s: %s\n" % (card.ability['type'], card.ability['name'])
 			return_str += "%s\n" % card.ability['text']
 			return_str += "\n"
+
+		# Add any attacks, including shorthand cost, text and damage
 		if card.attacks != None:
 			for attack in card.attacks:
 				for cost in attack['cost']:
@@ -114,6 +127,8 @@ Too many results. Try specifying the card number too. For example
 				if attack['text'] != None:
 					return_str += "%s\n" % attack['text']
 				return_str += "\n"
+
+		# Add weakness, resistances and retreat if they exist
 		if card.weaknesses != None:
 			for weakness in card.weaknesses:
 				return_str += ("Weakness: %s (%s)\n" %
