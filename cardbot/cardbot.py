@@ -67,7 +67,7 @@ def on_message(received):
 			)
 			recipient = received.author
 
-	match = re.match("!show\s+(.*)\s+(.*)$", received.content)
+	match = re.match("!show\s+(?:(.*)\s+)?(.*)$", received.content)
 	if match:
 		message = pokemontcg.show(match.group(1), match.group(2))
 
