@@ -146,5 +146,15 @@ Too many results. Try specifying the card number too. For example
 		return_str += "%s\n\n" % card.subtype
 		return_str += "%s\n" % "\n\n".join(card.text)
 
+	# Finally, get the set and legality info
+	card_set = Set.find(card.set_code)
+	return_str += "\n\n%s - %s/%s" % (card_set.name, card.number, card_set.total_cards)
+	if card_set.standard_legal == True:
+		return_str += " (Standard)"
+	#elif card_set.expanded_legal == True:
+	#	return_str += " (Expanded)"
+	else:
+		return_str += " (Legacy)"
+
 	return_str += "```\n"
 	return return_str
