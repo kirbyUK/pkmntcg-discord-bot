@@ -129,7 +129,7 @@ Too many results. Try specifying the card number too. For example
 	elif card.supertype == "Trainer" or card.supertype == "Energy":
 		return_str += "%s\n" % card.name
 		return_str += "%s\n\n" % card.subtype
-		return_str += "%s\n" % card.text[0]
+		return_str += "%s\n" % "\n\n".join(card.text)
 
 	return_str += "```\n"
 	return return_str
