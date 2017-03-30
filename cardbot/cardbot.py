@@ -31,15 +31,15 @@ def cardbot_help():
 		!search ninja boy
 		!search splash energy
 
-!show [card-name] [set-code]
-	Displays the text and image of the given card
-	from the given set. If you are unsure of the
-	set code, find it using !search first.
+!show [set-code]
+    Displays the text and image of the given card
+    from the given set. If you are unsure of the
+    set code, find it using !search first.
 
-	e.g.
-		!show ambipom xy11-91
-		!show ninja boy xy11-103
-		!show splash energy xy9-113
+    e.g.
+        !show xy11-91
+        !show xy11-103
+        !show xy9-113
 ```
 	"""
 
