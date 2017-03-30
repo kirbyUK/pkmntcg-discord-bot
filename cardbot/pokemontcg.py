@@ -151,8 +151,8 @@ Too many results. Try specifying the card number too. For example
 	return_str += "\n\n%s - %s/%s" % (card_set.name, card.number, card_set.total_cards)
 	if card_set.standard_legal == True:
 		return_str += " (Standard)"
-	#elif card_set.expanded_legal == True:
-	#	return_str += " (Expanded)"
+	elif card_set.expanded_legal == True:
+		return_str += " (Expanded)"
 	else:
 		return_str += " (Legacy)"
 
