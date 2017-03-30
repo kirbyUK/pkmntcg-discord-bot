@@ -2,7 +2,7 @@
 import discord
 import asyncio
 import logging
-import pokemontcg
+import cardbot.pokemontcg
 import re
 
 # The maximum number of lines the bot will post to a public server in one
