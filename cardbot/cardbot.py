@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import discord
 import asyncio
 import logging
@@ -80,8 +81,22 @@ def on_message(received):
 
 
 def main():
+	# Process command-line arguments to get the token
+	parser = argparse.ArgumentParser()
+	group = parser.add_mutually_exclusive_group()
+	group.add_argument('-t', '--token', help='The Discord API token')
+	group.add_argument('-f', '--token-file',
+		help='A file containing the Discord API token')
+	args = parser.parse_args()
+	if args.token:
+		token = args.token
+	elif args.token_file:
+		token = read_token(args.token_file)
+	else:
+		print("Please specify a valid API token with -t or -f")
+		return
+
 	logging.basicConfig(level=logging.INFO)
-	token = read_token("../token")
 	client.run(token)
 
 if __name__ == '__main__':
