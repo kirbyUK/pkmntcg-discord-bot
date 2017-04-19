@@ -12,6 +12,7 @@ short_energy = {
 	"Fairy" :     "[Y]",
 	"Fighting" :  "[F]",
 	"Fire" :      "[R]",
+	"Free" :      "[ ]",
 	"Grass" :     "[G]",
 	"Lightning" : "[L]",
 	"Leaf" :      "[G]",
