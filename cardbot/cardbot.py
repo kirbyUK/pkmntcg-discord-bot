@@ -60,8 +60,8 @@ def on_message(received):
 
 	match = re.match("!search\s+(.*)$", received.content)
 	if match:
-		message = cardbot.pokemontcg.search(match.group(1))
-		if len(message.split('\n')) - 1 > MAX_LINES:
+		(message, results) = cardbot.pokemontcg.search(match.group(1))
+		if results > MAX_LINES:
 			yield from client.send_message(
 				recipient,
 				"Results list is too long, messaging instead"
@@ -71,10 +71,6 @@ def on_message(received):
 	match = re.match("!show\s+(?:(.*)\s+)?(.*)$", received.content)
 	if match:
 		message = cardbot.pokemontcg.show(match.group(1), match.group(2))
-
-#	match = re.match("!show\s+(.*-.*)$", received.content)
-#	if match:
-#		message = pokemontcg.show("", match.group(1))
 
 	if len(message) > 0:
 		yield from client.send_message(recipient, message)

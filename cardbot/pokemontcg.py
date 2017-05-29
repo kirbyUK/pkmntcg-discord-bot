@@ -29,16 +29,16 @@ def search(name):
 	cards = Card.where(name = name).all()
 
 	if name == "":
-		return
+		return ("", 0)
 
 	# Give an error if there are no matches
 	if len(cards) == 0:
-		return "No matches for search '%s'" % name
+		return ("No matches for search '%s'" % name, 0)
 
 	# If there is exactly one match, save time for the user and give the
 	# !show output instead
 	if len(cards) == 1:
-		return show(cards[0].name, cards[0].set_code)
+		return (show(cards[0].name, cards[0].set_code), 1)
 
 	# If there are matches, build a string with the name, set and set code
 	# of every match
@@ -62,7 +62,7 @@ def search(name):
 		return_str += ("%s - %s %s/%s (`%s-%s`)\n" %
 			(card[0].name, card[1].name, card[0].number,
 			 card[1].total_cards, card[1].code, card[0].number))
-	return return_str
+	return (return_str, len(cards_with_sets))
 
 # Given a card name and set code, display an image and the text of the card
 def show(name, card_set):
