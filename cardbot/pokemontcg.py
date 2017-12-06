@@ -25,11 +25,24 @@ short_energy = {
 # list of matches sorted by release, and the set name and code the card was
 # released in
 def search(name):
-	# Search for the given text
-	cards = Card.where(name = name).all()
-
 	if name == "":
 		return ("", 0)
+
+	# Users will often enter 'hydreigon ex' when they really mean
+	# 'hydreigon-ex'. This annoying, but simply inserting the dash does not
+	# work as it makes Ruby/Sapphire era ex cards unaccessible. Instead,
+	# search for both
+	cards = []
+	if name.lower().endswith(" ex"):
+		cards.extend(Card.where(name = name).all())
+		cards.extend(Card.where(name = name.replace(" ex", "-ex")).all())
+	# GX cards do not have the same issue, so we can simply insert the dash
+	# as expected
+	elif name.lower().endswith(" gx"):
+		cards.extend(Card.where(name = name.replace(" gx", "-gx")).all())
+	# Otherwise, search for the given text
+	else:
+		cards = Card.where(name = name).all()
 
 	# Give an error if there are no matches
 	if len(cards) == 0:
