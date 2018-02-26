@@ -89,7 +89,10 @@ def on_message(received):
 				"Results list is too long, messaging instead"
 			)
 			recipient = received.author
-		yield from client.send_message(recipient, message)
+		if type(message) == discord.embeds.Embed:
+			yield from client.send_message(recipient, embed=message)
+		else:
+			yield from client.send_message(recipient, message)
 
 	match = re.match("!show\s+(?:(.*)\s+)?(.*)$", received.content)
 	if match:
