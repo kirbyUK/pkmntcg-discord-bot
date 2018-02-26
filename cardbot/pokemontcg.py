@@ -1,24 +1,55 @@
 #!/usr/bin/env python3
+import discord
 from pokemontcgsdk import Card
 from pokemontcgsdk import Set
 from pokemontcgsdk import Type
 from pokemontcgsdk import Supertype
 from pokemontcgsdk import Subtype
 
-# Shorthand symbols for attack energy costs, as used by PokeBeach
+# Conversion from type name to emoji
+emoji = {
+	'Colorless' : '<:ecolorless:362734594593914890>',
+	'Darkness'  : '<:edarkness:362733180274606080>',
+	'Dragon'    : '<:edragon:362737396179271680>',
+	'Fairy'     : '<:efairy:362733851371503616>',
+	'Fighting'  : '<:efighting:362732793995984917>',
+	'Fire'      : '<:efire:362731242044653578>',
+	'Free'      : '<:ecolorless:362734594593914890>',
+	'Grass'     : '<:egrass:362730672680599552>',
+	'Lightning' : '<:elightning:362731984474079233>',
+	'Psychic'   : '<:epsychic:362732305359568908>',
+	'Metal'     : '<:emetal:362733507539369984>',
+	'Water'     : '<:ewater:362731629988544512>',
+}
+
+# Conversion from type name to hex colour
+colour = {
+	'Colorless' : 0xF5F5DA,
+	'Darkness'  : 0x027798,
+	'Dragon'    : 0xD1A300,
+	'Fairy'     : 0xDD4787,
+	'Fighting'  : 0xC24635,
+	'Fire'      : 0xD7080C,
+	'Grass'     : 0x427B18,
+	'Lightning' : 0xF9D029,
+	'Psychic'   : 0xB139B6,
+	'Metal'     : 0xAFAFAF,
+	'Water'     : 0x02B2E6,
+}
+
+# Conversion from type name to PokeBeach shorthand
 short_energy = {
-	"Colorless" : "[C]",
-	"Darkness" :  "[D]",
-	"Fairy" :     "[Y]",
-	"Fighting" :  "[F]",
-	"Fire" :      "[R]",
-	"Free" :      "[ ]",
-	"Grass" :     "[G]",
-	"Lightning" : "[L]",
-	"Leaf" :      "[G]",
-	"Metal" :     "[M]",
-	"Psychic" :   "[P]",
-	"Water" :     "[W]",
+	'Colorless' : "[C]",
+	'Darkness'  : "[D]",
+	'Fairy'     : "[Y]",
+	'Fighting'  : "[F]",
+	'Fire'      : "[R]",
+	'Free'      : "[ ]",
+	'Grass'     : "[G]",
+	'Lightning' : "[L]",
+	'Psychic'   : "[P]",
+	'Metal'     : "[M]",
+	'Water'     : "[W]",
 }
 
 # Given a string, searches for cards by name using the given string. Return a
@@ -77,8 +108,94 @@ def search(name):
 			 card[1].total_cards, card[1].code, card[0].number))
 	return (return_str, len(cards_with_sets))
 
-# Given a card name and set code, display an image and the text of the card
-def show(name, card_set):
+def embed_create(card, card_set):
+	embed = None
+	if card.supertype == "Pokémon":
+		embed = pokemon_embed(card)
+	elif card.supertype == "Trainer" or card.supertype == "Energy":
+		embed = trainer_embed(card)
+
+	# Image
+	embed.set_image(url=card.image_url)
+
+	# Set and legality
+	text = "%s - %s/%s " % (card_set.name, card.number, card_set.total_cards)
+	if card_set.standard_legal == True:
+		text += " (Standard)"
+	elif card_set.expanded_legal == True:
+		text += " (Expanded)"
+	else:
+		text += " (Legacy)"
+#	embed.set_footer(text=text, icon_url=card_set.symbol_url)
+	embed.set_footer(text=text)
+
+	return embed
+	
+
+# Construct an Embed object from a Pokemon card and it's set
+def pokemon_embed(card):
+
+	# Name, type(s), HP
+	title = card.name
+	if card.hp != None:
+		title += " - HP%s" % (card.hp)
+	title += " - " + " / ".join(list(map(lambda x : emoji[x], card.types)))
+
+	# Subtype, evolution
+	desc = "%s Pokémon" % card.subtype
+#	if card.evolves_from != None:
+#		description += " (Evolves from %s)" % card.evolves_from
+
+	embed = discord.Embed(title=title, color=colour[card.types[0]], description=desc)
+
+	# Ability
+	if card.ability != None:
+		name = "%s: %s" % (card.ability['type'], card.ability['name'])
+		embed.add_field(name=name, value=card.ability['text'] or "-")
+
+	# Attacks
+	if card.attacks != None:
+		for attack in card.attacks:
+			name = ""
+			text = ""
+			for cost in attack['cost']:
+				name += "%s" % emoji[cost]
+			name += " %s" % attack['name']
+			if attack['damage'] != '':
+				name += " - %s" % attack['damage']
+			if attack['text'] != None and attack['text'] != "":
+				text = attack['text']
+			else:
+				text = "-"
+			embed.add_field(name=name, value=text, inline=False)
+
+	# Weakness, resistance, retreat
+	name = ""
+	if card.weaknesses != None:
+		name += "Weakness: "
+		for weakness in card.weaknesses:
+			name += ("%s (%s)" %
+				(emoji[weakness['type']], weakness['value']))
+	if card.resistances != None:
+		name += " - Resistance: "
+		for resistance in card.resistances:
+			name += ("%s (%s)" %
+				(emoji[resistance['type']], resistance['value']))
+	if card.retreat_cost != None:
+		name += " - Retreat: "
+		name += "%s" % emoji['Colorless'] * len(card.retreat_cost)
+	embed.add_field(name=name, value="-", inline=False)
+
+	return embed
+
+# Construct an Embed object from a Trainer or Energy card and it's set
+def trainer_embed(card):
+	embed = discord.Embed(title=card.name, description=card.subtype)
+	embed.add_field(name="Text", value=card.text[0])
+	return embed
+	
+# Get a card object from the passed name and set code
+def parse_card(name, card_set):
 	# If the card set includes a specific number, we can just use that to
 	# get the card
 	card = None
@@ -103,10 +220,23 @@ Too many results. Try specifying the card number too. For example
 			)
 
 		card = cards[0]
+	return card
+
+# Given a card name and set code, get an embed for that card
+def show(name, card_set_text):
+	card = parse_card(name, card_set_text)
+	if type(card) == str:
+		return card
+	card_set = Set.find(card.set_code)
+	return embed_create(card, card_set)
+
+# Given a card name and set code, return the card text as plain text
+def text(name, card_set_text):
+	card = parse_card(name, card_set_text)
+	card_set = Set.find(card.set_code)
 
 	# Create a string for the card text
-	return_str = "%s\n" % card.image_url
-	return_str += "```\n"
+	return_str = "```\n"
 
 	# Pokemon are the most involved as they have a lot going on
 	if card.supertype == "Pokémon":
@@ -161,7 +291,6 @@ Too many results. Try specifying the card number too. For example
 		return_str += "%s\n" % "\n\n".join(card.text)
 
 	# Finally, get the set and legality info
-	card_set = Set.find(card.set_code)
 	return_str += "\n\n%s - %s/%s" % (card_set.name, card.number, card_set.total_cards)
 	if card_set.standard_legal == True:
 		return_str += " (Standard)"
