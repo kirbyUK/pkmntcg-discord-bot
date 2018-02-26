@@ -151,7 +151,7 @@ def pokemon_embed(card):
 	# Ability
 	if card.ability != None:
 		name = "%s: %s" % (card.ability['type'], card.ability['name'])
-		embed.add_field(name=name, value=card.ability['text'] or "-")
+		embed.add_field(name=name, value=card.ability['text'] or '\u200b')
 
 	# Attacks
 	if card.attacks != None:
@@ -166,7 +166,7 @@ def pokemon_embed(card):
 			if attack['text'] != None and attack['text'] != "":
 				text = attack['text']
 			else:
-				text = "-"
+				text = '\u200b'
 			embed.add_field(name=name, value=text, inline=False)
 
 	# Weakness, resistance, retreat
@@ -184,7 +184,7 @@ def pokemon_embed(card):
 	if card.retreat_cost != None:
 		name += " - Retreat: "
 		name += "%s" % emoji['Colorless'] * len(card.retreat_cost)
-	embed.add_field(name=name, value="-", inline=False)
+	embed.add_field(name=name, value='\u200b', inline=False)
 
 	return embed
 
