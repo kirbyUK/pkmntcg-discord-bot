@@ -184,7 +184,8 @@ def pokemon_embed(card):
 	if card.retreat_cost != None:
 		name += " - Retreat: "
 		name += "%s" % emoji['Colorless'] * len(card.retreat_cost)
-	embed.add_field(name=name, value='\u200b', inline=False)
+	if name != "":
+		embed.add_field(name=name, value='\u200b', inline=False)
 
 	return embed
 
