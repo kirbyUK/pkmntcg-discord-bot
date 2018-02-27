@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import discord
+from functools import lru_cache
 from pokemontcgsdk import Card
 from pokemontcgsdk import Set
 from pokemontcgsdk import Type
@@ -55,6 +56,7 @@ short_energy = {
 # Given a string, searches for cards by name using the given string. Return a
 # list of matches sorted by release, and the set name and code the card was
 # released in
+@lru_cache(maxsize=256)
 def search(name):
 	if name == "":
 		return ("", 0)
@@ -192,7 +194,7 @@ def pokemon_embed(card):
 # Construct an Embed object from a Trainer or Energy card and it's set
 def trainer_embed(card):
 	embed = discord.Embed(title=card.name, description=card.subtype)
-	embed.add_field(name="Text", value=card.text[0])
+	embed.add_field(name='\u200b', value=card.text[0])
 	return embed
 	
 # Get a card object from the passed name and set code
@@ -224,6 +226,7 @@ Too many results. Try specifying the card number too. For example
 	return card
 
 # Given a card name and set code, get an embed for that card
+@lru_cache(maxsize=256)
 def show(name, card_set_text):
 	card = parse_card(name, card_set_text)
 	if type(card) == str:
