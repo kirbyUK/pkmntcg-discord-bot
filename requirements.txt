@@ -3,5 +3,5 @@ async-timeout==1.1.0
 chardet==2.3.0
 discord.py==0.16.5
 multidict==2.1.4
-pokemontcgsdk==1.2.0
+pokemontcgsdk==1.4.1
 websockets==3.2

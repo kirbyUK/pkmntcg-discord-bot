@@ -129,7 +129,7 @@ def embed_create(card, card_set):
 	else:
 		text += " (Legacy)"
 #	embed.set_footer(text=text, icon_url=card_set.symbol_url)
-	embed.set_footer(text=text)
+	embed.set_footer(text=text, icon_url=card_set.symbol_url)
 
 	return embed
 	
@@ -145,8 +145,8 @@ def pokemon_embed(card):
 
 	# Subtype, evolution
 	desc = "%s Pokémon" % card.subtype
-#	if card.evolves_from != None:
-#		description += " (Evolves from %s)" % card.evolves_from
+	if card.evolves_from != None and card.evolves_from != "":
+		desc += " (Evolves from %s)" % card.evolves_from
 
 	embed = discord.Embed(title=title, color=colour[card.types[0]], description=desc)
 
@@ -254,7 +254,10 @@ def text(name, card_set_text):
 		else:
 			return_str += "\n"
 
-		return_str += "%s Pokemon\n\n" % card.subtype
+		return_str += "%s Pokemon" % card.subtype
+		if card.evolves_from != None and card.evolves_from != "":
+			return_str += " (Evolves from %s)" % card.evolves_from
+		return_str += "\n\n"
 
 		# Add the ability if present
 		if card.ability != None:
