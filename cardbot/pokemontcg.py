@@ -67,15 +67,15 @@ def search(name):
 	# search for both
 	cards = []
 	if name.lower().endswith(" ex"):
-		cards.extend(Card.where(name = name).all())
-		cards.extend(Card.where(name = name.replace(" ex", "-ex")).all())
+		cards.extend(Card.where(name = name))
+		cards.extend(Card.where(name = name.replace(" ex", "-ex")))
 	# GX cards do not have the same issue, so we can simply insert the dash
 	# as expected
 	elif name.lower().endswith(" gx"):
-		cards.extend(Card.where(name = name.replace(" gx", "-gx")).all())
+		cards.extend(Card.where(name = name.replace(" gx", "-gx")))
 	# Otherwise, search for the given text
 	else:
-		cards = Card.where(name = name).all()
+		cards = Card.where(name = name)
 
 	# Give an error if there are no matches
 	if len(cards) == 0:
@@ -128,7 +128,6 @@ def embed_create(card, card_set):
 		text += " (Expanded)"
 	else:
 		text += " (Legacy)"
-#	embed.set_footer(text=text, icon_url=card_set.symbol_url)
 	embed.set_footer(text=text, icon_url=card_set.symbol_url)
 
 	return embed
@@ -208,7 +207,7 @@ def parse_card(name, card_set):
 			return "No results for card `%s`" % card_set
 	else:
 		# Search for the given card
-		cards = Card.where(name = name).where(setCode=card_set).all()
+		cards = Card.where(name = name, setCode=card_set)
 
 		if len(cards) == 0:
 			return ("No results found for '%s' in set `%s`" %

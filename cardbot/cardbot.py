@@ -6,20 +6,6 @@ import logging
 import cardbot.pokemontcg
 import re
 
-"""
-<:egrass:362730672680599552>
-<:efire:362731242044653578>
-<:ewater:362731629988544512>
-<:elightning:362731984474079233>
-<:epsychic:362732305359568908>
-<:efighting:362732793995984917>
-<:edarkness:362733180274606080>
-<:emetal:362733507539369984>
-<:efairy:362733851371503616>
-<:ecolorless:362734594593914890>
-<:edragon:362737396179271680>
-"""
-
 # The maximum number of lines the bot will post to a public server in one
 # message. Anything larger will be private messaged to avoid clutter
 MAX_LINES = 15
