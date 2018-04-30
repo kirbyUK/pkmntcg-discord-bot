@@ -67,12 +67,12 @@ def search(name):
 	# search for both
 	cards = []
 	if name.lower().endswith(" ex"):
-		cards.extend(Card.where(name = name))
-		cards.extend(Card.where(name = name.replace(" ex", "-ex")))
+		cards.extend(Card.where(name = name.lower()))
+		cards.extend(Card.where(name = name.lower().replace(" ex", "-ex")))
 	# GX cards do not have the same issue, so we can simply insert the dash
 	# as expected
 	elif name.lower().endswith(" gx"):
-		cards.extend(Card.where(name = name.replace(" gx", "-gx")))
+		cards.extend(Card.where(name = name.lower().replace(" gx", "-gx")))
 	# Otherwise, search for the given text
 	else:
 		cards = Card.where(name = name)
