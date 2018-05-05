@@ -192,7 +192,8 @@ def pokemon_embed(card):
 # Construct an Embed object from a Trainer or Energy card and it's set
 def trainer_embed(card):
 	embed = discord.Embed(title=card.name, description=card.subtype)
-	embed.add_field(name='\u200b', value=card.text[0])
+	for text in card.text:
+		embed.add_field(name='\u200b', value=text)
 	return embed
 	
 # Get a card object from the passed name and set code
