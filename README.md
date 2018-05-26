@@ -10,20 +10,32 @@ The bot can be seen used on the following Discord server: https://discord.gg/Ugf
 
 ## Installation
 
-Simply clone the directory, install dependencies then run the setup script
+### Release
 
+Download the latest [release](https://github.com/kirbyUK/pkmntcg-discord-bot/releases),
+and run the following (perferably in a [virtual environment](https://docs.python.org/3/library/venv.html)):
+
+```sh
+pip install pkmntcg_discord_bot-0.3-py3-none-any.whl
 ```
+
+### Source
+
+Simply clone the directory, build and install (again, ideally in a virtual
+environment):
+
+```sh
 git clone https://github.com/kirbyUK/pkmntcg-discord-bot
 cd pkmntcg-discord-bot
-make init
-python setup.py build
-python setup.py install
+make
+make install
 ```
 
-You then need to register a new bot from your Discord developer account and get
-a token for the bot, as well as invite it to any channels desired. Once a token
-is obtained, you can supply it as a command line argument or place it in a file.
-Running the bot using both these methods is shown here:
+You then need to [register a new bot](https://discordapp.com/developers/applications/me)
+from your Discord developer account and get a token for the bot, as well as
+invite it to any channels desired. Once a you have the token,  you can supply
+it as a command line argument or place it in a file. Running the bot using both
+these methods is shown here:
 
 ```
 cardbot -t [YOUR-TOKEN-HERE]
@@ -36,18 +48,27 @@ From the bot's own output, using the `!help` command:
 
 ```
 !search [card-name]
-    Gives a list of all cards matching the search
-    [card-name], as well as the set code and name.
+	Gives a list of all cards matching the search
+	[card-name], as well as the set code and name.
 
-    e.g.
-        !search ambipom
-        !search ninja boy
-        !search splash energy
+	e.g.
+	    !search ambipom
+	    !search ninja boy
+	    !search splash energy
 
 !show [set-code]
     Displays the text and image of the given card
     from the given set. If you are unsure of the
     set code, find it using !search first.
+
+    e.g.
+        !show xy11-91
+        !show xy11-103
+        !show xy9-113
+
+!text [set-code]
+    Similar to !show, however gives just the text in
+    a copy-and-pastable format.
 
     e.g.
         !show xy11-91
