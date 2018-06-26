@@ -18,5 +18,14 @@ setup(
 		'console_scripts' : [
 			'cardbot = cardbot.cardbot:main'
 		]
-	}
+	},
+	install_requires=[
+		'aiohttp>=1.0.5',
+		'async-timeout>=1.1.0',
+		'chardet>=2.3.0',
+		'discord.py>=0.16.12',
+		'multidict>=2.1.4',
+		'pokemontcgsdk>=2.0.0',
+		'websockets>=3.2'
+	]
 )
