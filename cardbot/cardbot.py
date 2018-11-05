@@ -23,13 +23,13 @@ def cardbot_help():
 	return """
 ```
 !search [card-name]
-	Gives a list of all cards matching the search
-	[card-name], as well as the set code and name.
+    Gives a list of all cards matching the search
+    [card-name], as well as the set code and name.
 
-	e.g.
-	    !search ambipom
-	    !search ninja boy
-	    !search splash energy
+    e.g.
+        !search ambipom
+        !search ninja boy
+        !search splash energy
 
 !show [set-code]
     Displays the text and image of the given card
@@ -42,13 +42,13 @@ def cardbot_help():
         !show xy9-113
 
 !text [set-code]
-    Similar to !show, however gives just the text in
-    a copy-and-pastable format.
+    Similar to !show, however gives just the card text
+    in a copy-and-pastable format.
 
     e.g.
-        !show xy11-91
-        !show xy11-103
-        !show xy9-113
+        !text xy11-91
+        !text xy11-103
+        !text xy9-113
 ```
 	"""
 
