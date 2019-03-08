@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import argparse
-import asyncio
 import logging
 import re
 import sys
@@ -51,24 +50,22 @@ def cardbot_help() -> str:
 client = discord.Client()
 
 @client.event
-@asyncio.coroutine
-def on_ready() -> None:
+async def on_ready() -> None:
 	print('Logged in as "{}" ({})'.format(client.user.name, client.user.id))
 
 @client.event
-@asyncio.coroutine
-def on_message(received: discord.Message) -> typing.Union[discord.Embed, str]:
+async def on_message(received: discord.Message) -> typing.Union[discord.Embed, str]:
 	message = ''
 	recipient = received.channel
 
 	if received.content.startswith('!help'):
-		yield from client.send_message(received.author, cardbot_help())
+		await client.send_message(received.author, cardbot_help())
 
 	match = re.match('!search\s+(.*)$', received.content)
 	if match:
 		(message, results) = cardbot.pokemontcg.search(match.group(1))
 		if results > MAX_LINES:
-			yield from client.send_message(
+			await client.send_message(
 				recipient,
 				'Results list is too long, messaging instead'
 			)
@@ -83,9 +80,9 @@ def on_message(received: discord.Message) -> typing.Union[discord.Embed, str]:
 		message = cardbot.pokemontcg.text(match.group(1), match.group(2))
 
 	if type(message) == discord.embeds.Embed:
-		yield from client.send_message(recipient, embed=message)
+		await client.send_message(recipient, embed=message)
 	elif type(message) == str and len(message) > 0:
-		yield from client.send_message(recipient, message)
+		await client.send_message(recipient, message)
 
 # Process commandline arguments to get the Discord API token
 def args() -> str:
