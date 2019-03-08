@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 import argparse
-import discord
 import asyncio
 import logging
-import cardbot.pokemontcg
 import re
+import typing
+
+import discord
+
+import cardbot.pokemontcg
 
 # The maximum number of lines the bot will post to a public server in one
 # message. Anything larger will be private messaged to avoid clutter
@@ -13,13 +16,13 @@ MAX_LINES = 15
 client = discord.Client()
 
 # Gets the token from a file
-def read_token(filename):
+def read_token(filename : str) -> str:
 	f = open(filename, 'r')
 	token = f.read()
 	return token
 
 # A help message listing the available commands and syntax
-def cardbot_help():
+def cardbot_help() -> str:
 	return """
 ```
 !search [card-name]
@@ -54,12 +57,12 @@ def cardbot_help():
 
 @client.event
 @asyncio.coroutine
-def on_ready():
+def on_ready() -> None:
 	print('Logged in as "{}" ({})'.format(client.user.name, client.user.id))
 
 @client.event
 @asyncio.coroutine
-def on_message(received):
+def on_message(received: discord.Message) -> typing.Union[discord.Embed, str]:
 	message = ''
 	recipient = received.channel
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import typing
 from functools import lru_cache
 
 import discord
@@ -57,7 +58,7 @@ short_energy = {
 # Given a string, searches for cards by name using the given string. Return a
 # list of matches sorted by release, and the set name and code the card was
 # released in
-def search(name):
+def search(name: str) -> typing.Tuple[str, int]:
 	if name == '':
 		return ('', 0)
 
@@ -122,7 +123,7 @@ def search(name):
 
 	return (return_str, len(cards_with_sets))
 
-def embed_create(card, card_set):
+def embed_create(card : Card, card_set : Set) -> discord.Embed:
 	embed = None
 	if card.supertype == 'Pokémon':
 		embed = pokemon_embed(card)
@@ -150,7 +151,7 @@ def embed_create(card, card_set):
 	
 
 # Construct an Embed object from a Pokemon card and it's set
-def pokemon_embed(card):
+def pokemon_embed(card : Card) -> discord.Embed:
 	# Name, type(s), HP
 	title = card.name
 	if card.hp is not None:
@@ -210,20 +211,20 @@ def pokemon_embed(card):
 	return embed
 
 # Construct an Embed object from a Trainer or Energy card and it's set
-def trainer_embed(card):
+def trainer_embed(card : Card) -> discord.Embed:
 	embed = discord.Embed(title=card.name, description=card.subtype)
 	for text in card.text:
 		embed.add_field(name='\u200b', value=text)
 	return embed
 	
 # Get a card object from the passed name and set code
-def parse_card(name, card_set):
+def parse_card(name : str, card_set : str) -> str:
 	# If the card set includes a specific number, we can just use that to
 	# get the card
 	card = None
 	if '-' in card_set:
 		card = Card.find(card_set)
-		if card == None:
+		if card is None:
 			return 'No results for card `{}`'.format(card_set)
 	else:
 		# Search for the given card
@@ -247,7 +248,7 @@ Too many results. Try specifying the card number too. For example
 
 # Given a card name and set code, get an embed for that card
 @lru_cache(maxsize=1024)
-def show(name, card_set_text):
+def show(name : str, card_set_text : str) -> discord.Embed:
 	card = parse_card(name, card_set_text)
 	if type(card) == str:
 		return card
@@ -255,7 +256,7 @@ def show(name, card_set_text):
 	return embed_create(card, card_set)
 
 # Given a card name and set code, return the card text as plain text
-def text(name, card_set_text):
+def text(name : str, card_set_text : str) -> str:
 	card = parse_card(name, card_set_text)
 	card_set = Set.find(card.set_code)
 
