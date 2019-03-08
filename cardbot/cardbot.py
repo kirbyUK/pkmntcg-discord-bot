@@ -50,37 +50,37 @@ def cardbot_help():
         !text xy11-103
         !text xy9-113
 ```
-	"""
+"""
 
 @client.event
 @asyncio.coroutine
 def on_ready():
-	print("Logged in as '%s' (%s)" % (client.user.name, client.user.id))
+	print('Logged in as "{}" ({})'.format(client.user.name, client.user.id))
 
 @client.event
 @asyncio.coroutine
 def on_message(received):
-	message = ""
+	message = ''
 	recipient = received.channel
 
-	if received.content.startswith("!help"):
+	if received.content.startswith('!help'):
 		yield from client.send_message(received.author, cardbot_help())
 
-	match = re.match("!search\s+(.*)$", received.content)
+	match = re.match('!search\s+(.*)$', received.content)
 	if match:
 		(message, results) = cardbot.pokemontcg.search(match.group(1))
 		if results > MAX_LINES:
 			yield from client.send_message(
 				recipient,
-				"Results list is too long, messaging instead"
+				'Results list is too long, messaging instead'
 			)
 			recipient = received.author
 
-	match = re.match("!show\s+(?:(.*)\s+)?(.*)$", received.content)
+	match = re.match('!show\s+(?:(.*)\s+)?(.*)$', received.content)
 	if match:
 		message = cardbot.pokemontcg.show(match.group(1), match.group(2))
 
-	match = re.match("!text\s+(?:(.*)\s+)?(.*)$", received.content)
+	match = re.match('!text\s+(?:(.*)\s+)?(.*)$', received.content)
 	if match:
 		message = cardbot.pokemontcg.text(match.group(1), match.group(2))
 
@@ -102,7 +102,7 @@ def main():
 	elif args.token_file:
 		token = read_token(args.token_file)
 	else:
-		print("Please specify a valid API token with -t or -f")
+		print('Please specify a valid API token with -t or -f')
 		return
 
 	logging.basicConfig(level=logging.INFO)
