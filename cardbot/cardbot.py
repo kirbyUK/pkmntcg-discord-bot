@@ -3,6 +3,7 @@ import argparse
 import asyncio
 import logging
 import re
+import sys
 import typing
 
 import discord
@@ -12,14 +13,6 @@ import cardbot.pokemontcg
 # The maximum number of lines the bot will post to a public server in one
 # message. Anything larger will be private messaged to avoid clutter
 MAX_LINES = 15
-
-client = discord.Client()
-
-# Gets the token from a file
-def read_token(filename : str) -> str:
-	f = open(filename, 'r')
-	token = f.read()
-	return token
 
 # A help message listing the available commands and syntax
 def cardbot_help() -> str:
@@ -54,6 +47,8 @@ def cardbot_help() -> str:
         !text xy9-113
 ```
 """
+
+client = discord.Client()
 
 @client.event
 @asyncio.coroutine
@@ -92,23 +87,31 @@ def on_message(received: discord.Message) -> typing.Union[discord.Embed, str]:
 	elif type(message) == str and len(message) > 0:
 		yield from client.send_message(recipient, message)
 
-def main():
-	# Process command-line arguments to get the token
+# Process commandline arguments to get the Discord API token
+def args() -> str:
 	parser = argparse.ArgumentParser()
 	group = parser.add_mutually_exclusive_group()
-	group.add_argument('-t', '--token', help='The Discord API token')
-	group.add_argument('-f', '--token-file',
-		help='A file containing the Discord API token')
+	group.add_argument(
+		'-t', '--token',
+		help='The Discord API token'
+	)
+	group.add_argument(
+		'-f', '--token-file',
+		type=argparse.FileType('r'),
+		help='A file containing the Discord API token'
+	)
 	args = parser.parse_args()
+
 	if args.token:
-		token = args.token
+		return args.token
 	elif args.token_file:
-		token = read_token(args.token_file)
+		return args.token_file.readline().rstrip()
 	else:
-		print('Please specify a valid API token with -t or -f')
+		print('Please specify a valid API token with -t or -f', file=sys.stderr)
 		return
 
-	logging.basicConfig(level=logging.INFO)
+def main():
+	token = args()
 	client.run(token)
 
 if __name__ == '__main__':
