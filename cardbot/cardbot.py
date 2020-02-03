@@ -80,9 +80,9 @@ async def on_message(received: discord.Message) -> typing.Union[discord.Embed, s
 		message = cardbot.pokemontcg.text(match.group(1), match.group(2))
 
 	if type(message) == discord.embeds.Embed:
-		await client.send_message(recipient, embed=message)
+		await recipient.send(embed=message)
 	elif type(message) == str and len(message) > 0:
-		await client.send_message(recipient, message)
+		await recipient.send(message)
 
 # Process commandline arguments to get the Discord API token
 def args() -> str:

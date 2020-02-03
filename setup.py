@@ -7,7 +7,7 @@ with open('LICENSE') as f:
 
 setup(
 	name='pkmntcg-discord-bot',
-	version='0.3',
+	version='0.4',
 	description='A Discord bot for searching and displaying Pokemon TCG cards',
 	author='Alex Kerr',
 	author_email='kirby@cpan.org',
@@ -20,7 +20,7 @@ setup(
 		]
 	},
 	install_requires=[
-		'discord.py>=0.16.12',
+		'discord.py>=1.3.1',
 		'pokemontcgsdk>=2.0.0',
 	]
 )
