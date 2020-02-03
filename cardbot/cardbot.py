@@ -59,14 +59,13 @@ async def on_message(received: discord.Message) -> typing.Union[discord.Embed, s
 	recipient = received.channel
 
 	if received.content.startswith('!help'):
-		await client.send_message(received.author, cardbot_help())
+		await recipient.send(cardbot_help())
 
 	match = re.match('!search\s+(.*)$', received.content)
 	if match:
 		(message, results) = cardbot.pokemontcg.search(match.group(1))
 		if results > MAX_LINES:
-			await client.send_message(
-				recipient,
+			await recipient.send(
 				'Results list is too long, messaging instead'
 			)
 			recipient = received.author
