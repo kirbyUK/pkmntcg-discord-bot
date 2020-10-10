@@ -90,3 +90,6 @@ ENV/
 
 # File containing the Discord token
 token
+
+# Editor config
+.vscode
