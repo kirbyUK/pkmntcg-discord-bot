@@ -81,10 +81,10 @@ class PokemonTCGIOV1Provider(ApiProvider):
             # Weakness, resistances and retreat all go on the same line
             bottom_line = ""
             if card.weaknesses:
-                bottom_line += f"Weakness: "
+                bottom_line += "Weakness: "
                 bottom_line += ", ".join([f"{emoji[w['type']]} ({w['value']})" for w in card.weaknesses])
             if card.resistances:
-                bottom_line += f" - Resistance: "
+                bottom_line += " - Resistance: "
                 bottom_line += ", ".join([f"{emoji[r['type']]} ({r['value']})" for r in card.resistances])
             if card.retreat_cost:
                 bottom_line += f" - Retreat: {emoji['Colorless'] * len(card.retreat_cost)}"
