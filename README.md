@@ -10,25 +10,11 @@ The bot can be seen used on the following Discord server: https://discord.gg/Ugf
 
 ## Installation
 
-### Release
-
-Download the latest [release](https://github.com/kirbyUK/pkmntcg-discord-bot/releases),
-and run the following (perferably in a [virtual environment](https://docs.python.org/3/library/venv.html)):
-
-```sh
-pip install pkmntcg_discord_bot-0.3-py3-none-any.whl
-```
-
-### Source
-
-Simply clone the directory, build and install (again, ideally in a virtual
-environment):
-
 ```sh
 git clone https://github.com/kirbyUK/pkmntcg-discord-bot
 cd pkmntcg-discord-bot
-make
-make install
+python -m venv venv
+pip install .
 ```
 
 You then need to [register a new bot](https://discordapp.com/developers/applications/me)
