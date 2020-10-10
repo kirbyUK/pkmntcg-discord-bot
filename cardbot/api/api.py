@@ -1,14 +1,14 @@
 """Contains generic types used by all API implementations to return back to the Discord handlers."""
 from abc import ABC, abstractmethod
 from datetime import date
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 class SearchResult:
     """Class representing the result of a card search."""
 
-    def __init__(self, name: str, set_name: str, set_no: int,
-                 set_max: int, release: date, card_id: str) -> None:
+    def __init__(self, name: str = "", set_name: str = "", set_no: int = 0,
+                 set_max: int = 0, release: date = date.today(), card_id: str = "") -> None:
         """
         Construct a SearchResult object.
 
@@ -30,9 +30,41 @@ class SearchResult:
 class ShowResult:
     """Class representing the result of a card show command."""
 
-    def __init__(self) -> None:
-        """Construct a ShowResult."""
-        pass
+    def __init__(self, name: str = "", supertype: str = "", subtype: str = "",
+                 legality: str = "", set_name: str = "", set_no: int = 0,
+                 set_max: int = 0, image: str = "", set_icon: str = "",
+                 fields: List[Tuple[str, str]] = [], hp: Optional[int] = None,
+                 evolves_from: Optional[str] = None, types: Optional[List[str]] = None) -> None:
+        """
+        Construct a ShowResult.
+
+        :param name: The name of the card
+        :param supertype: The supertype of the card (e.g. Pokémon, Trainer)
+        :param subtype: The subtype of the card (e.g. Basic, Tool)
+        :param legality: The most restrictive format the card is legal in (e.g. Standard)
+        :param set_name: The name of the set the card is in
+        :param set_no: The card's number within the set
+        :param set_max: The maximum count of cards within the set
+        :param image: The URL to the card's image
+        :param set_icon: The URL to the image of the icon of the set the card is from
+        :param fields: List of fields to add in the form of (title, content)
+        :param hp: The Pokemon's HP, if any
+        :param evolves_from: The Pokemon this card evolves from, if any
+        :param types: The card's types, if any
+        """
+        self.name = name
+        self.supertype = supertype
+        self.subtype = subtype
+        self.legality = legality
+        self.set_name = set_name
+        self.set_no = set_no
+        self.set_max = set_max
+        self.image = image
+        self.set_icon = set_icon
+        self.fields = fields
+        self.hp = hp
+        self.evolves_from = evolves_from
+        self.types = types
 
 
 class ApiProvider(ABC):
@@ -57,35 +89,3 @@ class ApiProvider(ABC):
         :returns: The result of the card lookup, or None if no card matches
         """
         return None
-
-
-"""Conversion from type name to emoji."""
-emoji = {
-    'Colorless': '<:ecolorless:362734594593914890>',
-    'Darkness': '<:edarkness:362733180274606080>',
-    'Dragon': '<:edragon:362737396179271680>',
-    'Fairy': '<:efairy:362733851371503616>',
-    'Fighting': '<:efighting:362732793995984917>',
-    'Fire': '<:efire:362731242044653578>',
-    'Free': '<:ecolorless:362734594593914890>',
-    'Grass': '<:egrass:362730672680599552>',
-    'Lightning': '<:elightning:362731984474079233>',
-    'Psychic': '<:epsychic:362732305359568908>',
-    'Metal': '<:emetal:362733507539369984>',
-    'Water': '<:ewater:362731629988544512>',
-}
-
-"""Conversion from type name to hex colour."""
-colour = {
-    'Colorless': 0xF5F5DA,
-    'Darkness': 0x027798,
-    'Dragon': 0xD1A300,
-    'Fairy': 0xDD4787,
-    'Fighting': 0xC24635,
-    'Fire': 0xD7080C,
-    'Grass': 0x427B18,
-    'Lightning': 0xF9D029,
-    'Psychic': 0xB139B6,
-    'Metal': 0xAFAFAF,
-    'Water': 0x02B2E6,
-}

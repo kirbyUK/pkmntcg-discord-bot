@@ -4,6 +4,7 @@ from functools import lru_cache
 import discord
 
 from cardbot.api.pokemontcgio_v1 import PokemonTCGIOV1Provider
+from cardbot.emoji import colours, emoji
 
 
 def cardbot_search(search_term: str) -> discord.Embed:
@@ -43,7 +44,44 @@ def cardbot_show(card_id: str) -> discord.Embed:
     :param card_id: The card to construct a Discord embed for
     :returns: The constructed Discord embed object for the card
     """
-    return discord.Embed(title="tbd")
+    card = PokemonTCGIOV1Provider().show(card_id)
+    if card:
+        # Constructing the title, description and colours of embeds differs depending
+        # on if the card is a Pokemon or not
+        if card.supertype == "Pokémon":
+            # The title contains the Pokemon's name, HP and types
+            title = card.name
+            if card.hp:
+                title += f" - HP{card.hp}"
+            if card.types:
+                title += f" - {'/'.join([emoji[x] for x in card.types])}"
+
+            # The description contains the card's subtype, and evolution (if any)
+            desc = f"{card.subtype} Pokémon"
+            if card.evolves_from and card.evolves_from != "":
+                desc += f" (Evolves from {card.evolves_from})"
+
+            # The colour is based on the Pokemon's type
+            if card.types and len(card.types) > 0:
+                colour = colours[card.types[0]]
+            else:
+                colour = 0x969696
+
+            embed = discord.Embed(title=title, description=desc, color=colour)
+        else:
+            embed = discord.Embed(title=card.name, description=card.subtype)
+
+        # Adding fields, the card image and the footer are common across all card types
+        for field in card.fields:
+            embed.add_field(name=field[0], value=field[1], inline=False)
+        embed.set_image(url=card.image)
+        embed.set_footer(
+            text=f"{card.set_name} - {card.set_no}/{card.set_max} ({card.legality})",
+            icon_url=card.set_icon)
+    else:
+        embed = discord.Embed(title=f":warning: No card with id '{card_id}'", color=0xff0000)
+
+    return embed
 
 
 def cardbot_help() -> discord.Embed:
