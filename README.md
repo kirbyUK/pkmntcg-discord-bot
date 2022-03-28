@@ -1,10 +1,12 @@
 # pkmntcg-discord-bot
 
+**As of 2022-03-28, this project is DEPRECATED. There has been a new version of
+  the Pokemon TCG API for a while, and I think there's changes coming to
+  discord.py that I'm not going to implement either.**
+
 Discord bot for a Pokemon TCG server. Can search cards and display the text and
 a link to the image. Uses [discord.py](https://discordpy.readthedocs.io/en/latest/)
 for the Discord API and [pokemontcg.io](https://pokemontcg.io/) for the cards.
-
-The bot can be seen used on the following Discord server: https://discord.gg/UgfcThp
 
 ![sample usage](https://raw.githubusercontent.com/kirbyUK/pkmntcg-discord-bot/master/preview.png)
 
